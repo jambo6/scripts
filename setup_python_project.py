@@ -1,3 +1,9 @@
+"""
+setup_python_project.py
+=====================================
+For setting up a new blank project. Includes conda environment creation, a standard gitignore, basic requirements
+installation, and black/flake8 with pre-commits if specified.
+"""
 import os
 import pathlib
 import argparse
@@ -16,6 +22,7 @@ args = parser.parse_args()
 script_path = pathlib.Path(__file__).parent.absolute()
 assets_path = pathlib.Path(script_path) / 'assets'
 folder = args.foldername
+true_location = os.getcwd() + '/' + folder
 
 # Get folder, ensure does not exists
 if not os.path.isdir(folder):
@@ -42,10 +49,10 @@ if args.pre_commit:
 
 # Add requirements if specified, else an empty requirements file
 if args.requirements:
-    shutil.copy(assets_path / 'requirements.txt', '{}'.format(folder))
+    shutil.copy(assets_path / 'requirements.txt', '{}/requirements.txt'.format(true_location))
     subprocess.check_call(
-        'cd {};'.format(folder) +
         'source ~/opt/miniconda3/etc/profile.d/conda.sh;' +
+        'cd {};'.format(true_location) +
         'conda activate ./env;' +
         'pip install -r requirements.txt',
     shell=True)
